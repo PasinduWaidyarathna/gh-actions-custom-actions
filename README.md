@@ -38,7 +38,6 @@ GH-ACTIONS-CUSTOM-ACTIONS/
 ├── .gitignore                     # Git ignore rules
 ├── index.html                     # HTML entry point
 ├── package-lock.json              # Dependency lock file
-├── package-lock.json              # Dependency lock file
 ├── package.json                   # Project configuration
 ├── test.json                      # Test results output
 └── vite.config.js                 # Vite bundler configuration
