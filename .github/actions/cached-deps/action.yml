@@ -1,15 +1,15 @@
 name: 'Get Cache & Dependencies'
 description: 'Get dependencies and cache them.'
 runs:
-  using: 'composite'
+  using: 'composite'  # Indicates this is a composite action combining multiple steps
   steps:
    - name: Cache dependencies
-     id: cache
-     uses: actions/cache@v4
+     id: cache  # This ID is used to check cache status in later steps
+     uses: actions/cache@v4  # Uses GitHub's official caching action
      with:
-      path: node_modules
-      key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      path: node_modules  # Caches the entire node_modules directory
+      key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}  # Creates unique cache key based on package-lock.json hash
    - name: Install dependencies
-     if: steps.cache.outputs.cache-hit != 'true'
-     run: npm ci
-     shell: bash
+     if: steps.cache.outputs.cache-hit != 'true'  # Only runs if cache wasn't found (improves efficiency)
+     run: npm ci   # Uses clean install for consistent dependencies
+     shell: bash  # Required for composite actions running shell commands
