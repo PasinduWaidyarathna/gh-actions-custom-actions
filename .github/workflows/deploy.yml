@@ -2,17 +2,17 @@ name: Deployment
 on:
   push:
     branches:
-      - main
+      - main  # Triggers workflow only on pushes to main branch
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Defines the runner environment
     steps:
       - name: Get code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Checks out repository code
       - name: Load & cache dependencies
-        uses: ./.github/actions/cached-deps
+        uses: ./.github/actions/cached-deps  # Uses our custom caching action
       - name: Lint code
-        run: npm run lint
+        run: npm run lint  # Runs linting to ensure code quality
   test:
     runs-on: ubuntu-latest
     steps:
@@ -21,16 +21,16 @@ jobs:
       - name: Load & cache dependencies
         uses: ./.github/actions/cached-deps
       - name: Test code
-        id: run-tests
+        id: run-tests  # ID allows referencing this step's outcome later
         run: npm run test
       - name: Upload test report
-        if: failure() && steps.run-tests.outcome == 'failure'
-        uses: actions/upload-artifact@v4
+        if: failure() && steps.run-tests.outcome == 'failure'  # Only uploads report if tests fail 
+        uses: actions/upload-artifact@v4  # Preserves test results for debugging
         with:
           name: test-report
           path: test.json
   build:
-    needs: test
+    needs: test  # Ensures build only runs after tests pass
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -40,22 +40,22 @@ jobs:
       - name: Build website
         run: npm run build
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Stores build output for deployment job
         with:
           name: dist-files
           path: dist
   deploy:
-    needs: build
+    needs: build  # Ensures deployment only runs after successful build
     runs-on: ubuntu-latest
     steps:
       - name: Get code
         uses: actions/checkout@v4
       - name: Get build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4  # Retrieves previously uploaded build artifacts
         with:
           name: dist-files
           path: ./dist
       - name: Output contents
-        run: ls
+        run: ls  # Lists files to verify artifacts were downloaded correctly
       - name: Deploy site
-        run: echo "Deploying..."
+        run: echo "Deploying..."  # Placeholder for actual deployment command
